@@ -3,7 +3,7 @@ package main
 import "fmt"
 
 func main() {
-	var pq = NewPriorityQueue()
+	var pq = NewPriorityQueue[int]()
 	pq.Push(1, 10)
 	pq.Push(2, 5)
 	pq.Push(3, 15)
