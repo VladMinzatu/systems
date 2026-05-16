@@ -8,30 +8,29 @@ func TestPriorityQueue(t *testing.T) {
 	pq.Push(2, 5)
 	pq.Push(3, 15)
 
-	if pq.Peek() != (Entry{Key: 2, Priority: 5}) {
-		t.Errorf("Expected {2 5}, got %v", pq.Peek())
+	if entry, ok := pq.Peek(); entry != (Entry{Key: 2, Priority: 5}) || !ok {
+		t.Errorf("Expected {2 5}, got %v", entry)
 	}
-
-	if pq.Pop() != (Entry{Key: 2, Priority: 5}) {
-		t.Errorf("Expected {2 5}, got %v", pq.Pop())
+	if entry, ok := pq.Pop(); entry != (Entry{Key: 2, Priority: 5}) || !ok {
+		t.Errorf("Expected {2 5}, got %v", entry)
 	}
-	if pq.Pop() != (Entry{Key: 1, Priority: 10}) {
-		t.Errorf("Expected {1 10}, got %v", pq.Pop())
+	if entry, ok := pq.Pop(); entry != (Entry{Key: 1, Priority: 10}) || !ok {
+		t.Errorf("Expected {1 10}, got %v", entry)
 	}
-	if pq.Pop() != (Entry{Key: 3, Priority: 15}) {
-		t.Errorf("Expected {3 15}, got %v", pq.Pop())
+	if entry, ok := pq.Pop(); entry != (Entry{Key: 3, Priority: 15}) || !ok {
+		t.Errorf("Expected {3 15}, got %v", entry)
 	}
-	if pq.Pop() != (Entry{}) {
-		t.Errorf("Expected empty entry when underflowing , got %v", pq.Pop())
+	if entry, ok := pq.Pop(); entry != (Entry{}) || ok {
+		t.Errorf("Expected empty entry when underflowing , got %v", entry)
 	}
 }
 
 func TestEmptyPriorityQueue(t *testing.T) {
 	var pq = NewPriorityQueue()
-	if pq.Pop() != (Entry{}) {
-		t.Errorf("Expected empty entry, got %v", pq.Pop())
+	if entry, ok := pq.Pop(); entry != (Entry{}) || ok {
+		t.Errorf("Expected empty entry, got %v", entry)
 	}
-	if pq.Peek() != (Entry{}) {
-		t.Errorf("Expected empty entry, got %v", pq.Peek())
+	if entry, ok := pq.Peek(); entry != (Entry{}) || ok {
+		t.Errorf("Expected empty entry, got %v", entry)
 	}
 }

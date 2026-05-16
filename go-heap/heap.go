@@ -22,18 +22,18 @@ func (pq *PriorityQueue) Push(key, priority int) {
 	heap.Push(&pq.storage, entry)
 }
 
-func (pq *PriorityQueue) Peek() Entry {
+func (pq *PriorityQueue) Peek() (Entry, bool) {
 	if len(pq.storage) == 0 {
-		return Entry{}
+		return Entry{}, false
 	}
-	return pq.storage[0]
+	return pq.storage[0], true
 }
 
-func (pq *PriorityQueue) Pop() Entry {
+func (pq *PriorityQueue) Pop() (Entry, bool) {
 	if len(pq.storage) == 0 {
-		return Entry{}
+		return Entry{}, false
 	}
-	return heap.Pop(&pq.storage).(Entry)
+	return heap.Pop(&pq.storage).(Entry), true
 }
 
 // internal storage for the entries that implements the heap interface, that cointainers/heap needs to work with
