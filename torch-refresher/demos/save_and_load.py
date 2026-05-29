@@ -4,6 +4,9 @@ import os
 
 model_file_name = "my_model.pt"
 
+# This demo shows how to save and load a PyTorch model using torch.save and torch.load.
+# ⚠️ Note: Saving the entire model is not recommended due to pickle security issues and potential compatibility problems.
+# Normally, you should save only the model's state_dict and the architecture separately, as in save_and_load_v2.py.
 def main():
     # Create a simple model
     model = nn.Sequential(
