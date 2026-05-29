@@ -1,5 +1,5 @@
 ## Run
 
 ```
-uv run main.py
+uv run demos/<demo_name>.py
 ```
