@@ -41,6 +41,8 @@ def main():
             _ = large_model_mps(large_input_mps)
         large_gpu_time = timeit.timeit(lambda: large_model_mps(large_input_mps), number=100)
         print(f"[mps GPU] Large model: Time for 100 forward passes: {large_gpu_time:.4f} seconds")
+    
+    torch.mps.synchronize()  # Ensure all GPU operations are complete before exiting
 
 if __name__ == "__main__":
     main()
