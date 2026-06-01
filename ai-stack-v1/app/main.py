@@ -1,7 +1,9 @@
 from fastapi import FastAPI
+from app.routers import items
 
 app = FastAPI()
+app.include_router(items.router)
 
-@app.get("/")
+@app.get("/health")
 async def root():
-    return {"message": "Hello World!"}
+    return {"OK": "Service healthy"}
