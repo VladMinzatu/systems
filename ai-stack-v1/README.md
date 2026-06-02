@@ -3,6 +3,7 @@
 ```
 uv run fastapi dev
 ```
+(To set that up, used `uv add fastapi --extra standard` after uv init, according to instructions [here](https://docs.astral.sh/uv/guides/integration/fastapi/#migrating-an-existing-fastapi-project)).
 
 Testing chat endpoint:
 ```
