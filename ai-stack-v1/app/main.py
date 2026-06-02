@@ -1,8 +1,8 @@
 from fastapi import FastAPI
-from app.routers import items
+from app.routers import chat
 
 app = FastAPI()
-app.include_router(items.router)
+app.include_router(chat.router)
 
 @app.get("/health")
 async def root():
