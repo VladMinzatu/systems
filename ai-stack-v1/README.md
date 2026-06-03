@@ -10,6 +10,11 @@ Testing chat endpoint:
 curl -X POST http://localhost:8000/chat -H "Content-Type: application/json" -d '{"prompt":"Explain FastAPI in one sentence"}'
 ```
 
+Testing the streaming ednpoint:
+```
+curl -N -X POST http://localhost:8000/chat-stream -H "Content-Type: application/json"  -d '{"prompt":"Explain FastAPI in one sentence"}'
+```
+
 ### Local setup with ollama
 
 While in production the API might probably use a vLLM inference backend, locally i'm using [ollama](https://github.com/ollama/ollama).
