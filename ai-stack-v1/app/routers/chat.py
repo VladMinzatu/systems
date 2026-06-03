@@ -5,9 +5,11 @@ import httpx
 import json
 
 VLLM_URL = "http://localhost:11434" # For running with ollama locally
+MODEL_NAME = "qwen2.5:7b" # TODO: make this configurable - this is the ollama name for running locally
+DEFAULT_TEMPERATURE = 0.7
+DEFAULT_MAX_TOKENS = 256
 
 router = APIRouter()
-
 
 class GenerateRequest(BaseModel):
     prompt: str
@@ -41,22 +43,10 @@ async def chat_stream(req: GenerateRequest):
     return EventSourceResponse(event_generator())
 
 async def generate(prompt: str):
-    payload = {
-        "model": "qwen2.5:7b", # TODO: make this configurable - this is the ollama name for running locally
-        "messages": [
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ],
-        "temperature": 0.7,
-        "max_tokens": 256
-    }
-
     async with httpx.AsyncClient() as client:
         response = await client.post(
             f"{VLLM_URL}/v1/chat/completions",
-            json=payload,
+            json=request_payload(prompt, stream=False),
             timeout=120
         )
 
@@ -68,25 +58,12 @@ async def generate(prompt: str):
 
 async def stream_generate(prompt: str):
 
-    payload = {
-        "model": "qwen2.5:7b",
-        "messages": [
-            {
-                "role": "user",
-                "content": prompt,
-            }
-        ],
-        "temperature": 0.7,
-        "max_tokens": 256,
-        "stream": True,
-    }
-
     async with httpx.AsyncClient(timeout=None) as client:
 
         async with client.stream(
             "POST",
             f"{VLLM_URL}/v1/chat/completions",
-            json=payload,
+            json=request_payload(prompt, stream=True),
         ) as response:
 
             response.raise_for_status()
@@ -114,3 +91,17 @@ async def stream_generate(prompt: str):
 
                 if token:
                     yield token
+
+def request_payload(prompt: str, stream: bool = False):
+    return {
+        "model": MODEL_NAME,
+        "messages": [
+            {
+                "role": "user",
+                "content": prompt,
+            }
+        ],
+        "temperature": DEFAULT_TEMPERATURE,
+        "max_tokens": DEFAULT_MAX_TOKENS,
+        "stream": stream,
+    }
