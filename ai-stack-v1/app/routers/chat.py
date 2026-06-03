@@ -31,14 +31,8 @@ async def chat_stream(req: GenerateRequest):
 
     async def event_generator():
         async for chunk in stream_generate(req.prompt):
-            yield {
-                "event": "token",
-                "data": chunk,
-            }
-        yield {
-            "event": "done",
-            "data": "",
-        }
+            yield chunk
+        yield "DONE"
 
     return EventSourceResponse(event_generator())
 
