@@ -1,22 +1,10 @@
-from pydantic_ai import Agent
-from pydantic_ai.models.ollama import OllamaModel
-from pydantic_ai.providers.ollama import OllamaProvider
+from applications.dice_game import DiceGame
+from agents.models import set_up_local_model
 
 def main():
-    model = OllamaModel(
-        "qwen2.5:7b",
-        provider=OllamaProvider(
-        base_url="http://localhost:11434/v1"
-        ),
-    )
-
-    agent = Agent(  
-        model,
-        instructions='Be concise, reply with one sentence.',  
-    )
-
-    result = agent.run_sync('What is pydantic.ai?')  
-    print(result.output)
+    ollama_model = set_up_local_model()
+    game = DiceGame(ollama_model)
+    game.play(guess=3, name="Vlad")
 
 if __name__ == "__main__":
     main()
