@@ -1,10 +1,10 @@
-from applications.dice_game import DiceGame
 from agents.models import set_up_local_model
+from applications.web_searcher import WebSearcher
 
 def main():
     ollama_model = set_up_local_model()
-    game = DiceGame(ollama_model)
-    game.play(guess=3, name="Vlad")
+    game = WebSearcher(ollama_model)
+    game.search(query="What is the capital of France?")
 
 if __name__ == "__main__":
     main()
