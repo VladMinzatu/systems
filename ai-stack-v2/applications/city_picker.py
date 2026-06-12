@@ -6,7 +6,7 @@ class CityPicker:
         self.city_picker_agent = Agent(  
             model,
             instructions="""Use the `generate_city` tool to generate some cities.
-            Then pick the biggest one amont them and return the name of the city.
+            Then pick the largest one among them by population and return the name of the city.
             """
             )
         self.city_generator_agent = Agent(
@@ -23,7 +23,10 @@ class CityPicker:
 
 
     def pick(self):
-        result = self.city_picker_agent.run_sync("Pick a city")  
+        result = self.city_picker_agent.run_sync(
+            "Pick a city",
+            usage_limits=UsageLimits(request_limit=5,total_tokens_limit=1000)
+            )  
         print(result.output)
 
         print(result.all_messages())
