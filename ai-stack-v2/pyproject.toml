@@ -5,6 +5,8 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
-    "pydantic-ai>=1.107.0",
-    "pydantic-ai-slim[duckduckgo]>=1.107.0",
+    "mcp>=1.27.2",
+    "pydantic-ai[mcp]>=1.107.0",
+    "pydantic-ai-slim[duckduckgo,mcp,openai]>=1.107.0",
+    "fastmcp>=3.4.2",
 ]

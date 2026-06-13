@@ -19,14 +19,18 @@ name = "ai-stack-v2"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "fastmcp" },
+    { name = "mcp" },
     { name = "pydantic-ai" },
-    { name = "pydantic-ai-slim", extra = ["duckduckgo"] },
+    { name = "pydantic-ai-slim", extra = ["duckduckgo", "mcp", "openai"] },
 ]
 
 [package.metadata]
 requires-dist = [
-    { name = "pydantic-ai", specifier = ">=1.107.0" },
-    { name = "pydantic-ai-slim", extras = ["duckduckgo"], specifier = ">=1.107.0" },
+    { name = "fastmcp", specifier = ">=3.4.2" },
+    { name = "mcp", specifier = ">=1.27.2" },
+    { name = "pydantic-ai", extras = ["mcp"], specifier = ">=1.107.0" },
+    { name = "pydantic-ai-slim", extras = ["duckduckgo", "mcp", "openai"], specifier = ">=1.107.0" },
 ]
 
 [[package]]
