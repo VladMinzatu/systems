@@ -3,9 +3,9 @@
 from pydantic_ai import Agent
 from pydantic_ai.mcp import MCPServerStdio
 
-class SummerAgent():
+class AgenticSummer():
     def __init__(self, model):
-        self.server = MCPServerStdio('uv', args=['run', './mcp-servers/sum-server.py', 'stdio'], timeout=20)
+        self.server = MCPServerStdio('uv', args=['run', './mcp-servers/sum-server.py', 'stdio'], timeout=10)
         self.agent = Agent(model, 
         output_type=int,
         toolsets=[self.server])
