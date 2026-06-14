@@ -18,3 +18,45 @@ curl -i "localhost:8080/work?type=heavy"
 ```
 
 And that should produce the trace.out.
+
+## Observations
+
+When running the light requests, we get the following output:
+```
+Summary:
+  Total:	20.1284 secs
+  Slowest:	0.0346 secs
+  Fastest:	0.0008 secs
+  Average:	0.0157 secs
+  Requests/sec:	499.2948
+  
+
+Response time histogram:
+  0.001 [1]	|
+  0.004 [626]	|■■■■■■■■■■■■■
+  0.008 [846]	|■■■■■■■■■■■■■■■■■■
+  0.011 [972]	|■■■■■■■■■■■■■■■■■■■■■
+  0.014 [1495]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.018 [1844]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.021 [1861]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.024 [1640]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.028 [698]	|■■■■■■■■■■■■■■■
+  0.031 [51]	|■
+  0.035 [16]	|
+
+
+Latency distribution:
+  10% in 0.0056 secs
+  25% in 0.0111 secs
+  50% in 0.0164 secs
+  75% in 0.0209 secs
+  90% in 0.0239 secs
+  95% in 0.0252 secs
+  99% in 0.0272 secs
+  ```
+
+But when making the heavy request, we trigger our conditional trace dump:
+```
+2026/06/14 11:58:46 Slow request detected! Request took 739.60275ms, writing trace...
+2026/06/14 11:58:46 Trace written successfully
+```
