@@ -60,3 +60,8 @@ But when making the heavy request, we trigger our conditional trace dump:
 2026/06/14 11:58:46 Slow request detected! Request took 739.60275ms, writing trace...
 2026/06/14 11:58:46 Trace written successfully
 ```
+
+To inspect the trace output:
+```
+go tool trace trace.out
+```
