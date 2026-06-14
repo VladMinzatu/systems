@@ -12,8 +12,8 @@ import (
 
 func main() {
 	cfg := trace.FlightRecorderConfig{
-		MinAge:   5 * time.Second,
-		MaxBytes: 5 * 1024 * 1024, // 5 MB
+		MinAge:   2 * time.Second,
+		MaxBytes: 2 * 1024 * 1024, // 2 MB
 	}
 
 	fr := trace.NewFlightRecorder(cfg)
