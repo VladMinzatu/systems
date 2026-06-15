@@ -19,7 +19,7 @@ func (td *TraceDumper) Dump() {
 	td.once.Do(func() {
 		go func() {
 			// spawning this goroutine is on the hot path of the request handler, but writing the trace is not
-			// even more efficient, but more verbose: we coudl set up a buffered channel and have a near permanently parked goroutine for trace dumping, but it's probably not worth the extra complexity
+			// even more efficient, but more verbose: we could set up a buffered channel and have a near permanently parked goroutine for trace dumping, but it's probably not worth the extra complexity
 			if err := writeTrace(td.fr); err != nil {
 				log.Printf("Failed to write trace: %v", err)
 			} else {
