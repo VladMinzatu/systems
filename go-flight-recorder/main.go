@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -10,6 +9,25 @@ import (
 	"sync"
 	"time"
 )
+
+type TraceDumper struct {
+	fr   *trace.FlightRecorder
+	once sync.Once // we'll only do this once (per TraceDumper instance)
+}
+
+func (td *TraceDumper) Dump() {
+	td.once.Do(func() {
+		go func() {
+			// spawning this goroutine is on the hot path of the request handler, but writing the trace is not
+			// even more efficient, but more verbose: we coudl set up a buffered channel and have a near permanently parked goroutine for trace dumping, but it's probably not worth the extra complexity
+			if err := writeTrace(td.fr); err != nil {
+				log.Printf("Failed to write trace: %v", err)
+			} else {
+				log.Println("Trace written successfully")
+			}
+		}()
+	})
+}
 
 func main() {
 	cfg := trace.FlightRecorderConfig{
@@ -23,14 +41,13 @@ func main() {
 	}
 	defer fr.Stop()
 
-	dumpTraceCh, cancel := setUpTraceWriterListener(fr)
-	defer cancel()
+	td := &TraceDumper{fr: fr}
 
-	http.HandleFunc("/work", workHandler(fr, dumpTraceCh))
+	http.HandleFunc("/work", workHandler(td))
 	http.ListenAndServe(":8080", nil)
 }
 
-func workHandler(fr *trace.FlightRecorder, dumpTraceCh chan<- struct{}) http.HandlerFunc {
+func workHandler(td *TraceDumper) http.HandlerFunc {
 	var traceWritten sync.Once // notice the Once, to ensure we only write the trace once - and notice the use of closure to capture the flight recorder instance for use in each request handler
 	return func(w http.ResponseWriter, r *http.Request) {
 		// handle and time the request
@@ -42,30 +59,10 @@ func workHandler(fr *trace.FlightRecorder, dumpTraceCh chan<- struct{}) http.Han
 		if duration > 200*time.Millisecond {
 			traceWritten.Do(func() {
 				log.Printf("Slow request detected! Request took %v, writing trace...", duration)
-				dumpTraceCh <- struct{}{} // just signal the trace writer to write the trace, we don't want to do it in the request handler itself, further slowing down the slow request
+				td.Dump()
 			})
 		}
 	}
-}
-
-func setUpTraceWriterListener(fr *trace.FlightRecorder) (chan<- struct{}, context.CancelFunc) {
-	ch := make(chan struct{}, 1) // buffered channel to avoid blocking the request handler if the trace writer is busy
-	ctx, cancel := context.WithCancel(context.Background())
-	go func() {
-		for {
-			select {
-			case <-ch:
-				if err := writeTrace(fr); err != nil {
-					log.Printf("Failed to write trace: %v", err)
-				} else {
-					log.Println("Trace written successfully")
-				}
-			case <-ctx.Done():
-				return
-			}
-		}
-	}()
-	return ch, cancel
 }
 
 func handleRequest(requestType string) {
