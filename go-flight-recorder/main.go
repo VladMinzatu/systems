@@ -50,17 +50,17 @@ func workHandler(fr *trace.FlightRecorder) http.HandlerFunc {
 
 func handleRequest(requestType string) {
 	if requestType == "heavy" {
-		heavyWork()
+		doHeavyWork()
 	} else {
-		lightWork()
+		doLightWork()
 	}
 }
 
-func lightWork() {
+func doLightWork() {
 	doWork(10_000)
 }
 
-func heavyWork() {
+func doHeavyWork() {
 	doWork(10_000_000)
 }
 
