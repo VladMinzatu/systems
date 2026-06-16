@@ -48,7 +48,6 @@ func main() {
 }
 
 func workHandler(td *TraceDumper) http.HandlerFunc {
-	var traceWritten sync.Once // notice the Once, to ensure we only write the trace once - and notice the use of closure to capture the flight recorder instance for use in each request handler
 	return func(w http.ResponseWriter, r *http.Request) {
 		// handle and time the request
 		start := time.Now()
@@ -57,10 +56,8 @@ func workHandler(td *TraceDumper) http.HandlerFunc {
 
 		// if slow request, write trace (but only once)
 		if duration > 200*time.Millisecond {
-			traceWritten.Do(func() {
-				log.Printf("Slow request detected! Request took %v, writing trace...", duration)
-				td.Dump()
-			})
+			log.Printf("Slow request detected! Request took %v, writing trace...", duration)
+			td.Dump()
 		}
 	}
 }
