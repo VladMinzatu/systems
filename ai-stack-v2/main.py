@@ -5,7 +5,7 @@ def main():
     ollama_model = set_up_local_model()
     summer_agent = AgenticSummer(ollama_model)
     result = summer_agent.run("What is 5 + 7?")
-    print(f"Result of 5 + 7: {result.output}")
+    print(f"Result of 5 + 7: {result}")
 
 if __name__ == "__main__":
     main()
