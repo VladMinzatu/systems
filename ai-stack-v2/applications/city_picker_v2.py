@@ -7,6 +7,9 @@ import json
 class CityOptions(BaseModel):
   cities: list[str]
 
+# class CityChoice(BaseModel): # With a small model, at least, this seems to have made it worse, not better
+#   city: str
+  
 class CityPickerV2:
     def __init__(self, model):
         self.city_picker_agent = Agent(  
@@ -38,9 +41,9 @@ class CityPickerV2:
                     print('No worries, let\'s try that again')
                     answered_properly = True
                 else:
-                    print('Sir, c\'mon, please answer yes or no')
+                    print('c\'mon, please answer yes or no')
 
-        print('Great, let me pick one for you')
+        print('Great, let me pick one for you...')
         response = self.city_picker_agent.run_sync(f'Pick one of the cities from the list: {json.dumps(options.output.cities)}')
         city = response.output
         print(f'You\'re going to {city}!')
