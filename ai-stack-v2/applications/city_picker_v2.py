@@ -16,17 +16,25 @@ class CityPickerV2:
         self.city_generator_agent = Agent(
             model,
             output_type=CityOptions,
-            instructions="""
-                When asked for a list of cities, generate as many as requested and return them in a list.
-                When you have the answer, call the final result tool with the CityOptions response. Do not output prose.
-            """
+            instructions="When asked for a list of cities, call the final result tool with the CityOptions response with a list of city names. Do not output prose."
             )
 
     def pick(self):
-        options = self.city_generator_agent.run_sync(f'Generate 5 European cities and return their names as a list.',)
-        print(options.output)
-
-        prompt = Prompt.ask(
-          'Are you happy with the options? \\[yes/no]',
-        )
-        print(f'You said {prompt}')
+        can_pick = False
+        while not can_pick:
+            options = self.city_generator_agent.run_sync(f'Give me 5 European cities. Think a bit outside the box, get creative, don\'t suggest the same biggest capitals each time.',)
+            print(f'I propose choosing one of these cities {options.output.cities}')
+            
+            answered_properly = False
+            while not answered_properly:
+                answer = Prompt.ask(
+                'Are you happy with the options? \\[yes/no]',
+                )
+                if answer == 'yes':
+                    can_pick = True
+                    answered_properly = True
+                elif answer == 'no':
+                    print('No worries, let\'s try that again')
+                    answered_properly = True
+                else:
+                    print('Sir, c\'mon, please answer yes or no')
