@@ -2,6 +2,7 @@
 from pydantic_ai import Agent, RunContext, UsageLimits
 from rich.prompt import Prompt
 from pydantic import BaseModel
+import json
 
 class CityOptions(BaseModel):
   cities: list[str]
@@ -11,7 +12,7 @@ class CityPickerV2:
         self.city_picker_agent = Agent(  
             model,
             output_type=str,
-            instructions="When given a list of cities, pick one of them and return it as a string."
+            instructions="When given a list of cities, pick one of them and return it as a string by calling the output tool."
             )
         self.city_generator_agent = Agent(
             model,
@@ -38,3 +39,8 @@ class CityPickerV2:
                     answered_properly = True
                 else:
                     print('Sir, c\'mon, please answer yes or no')
+
+        print('Great, let me pick one for you')
+        response = self.city_picker_agent.run_sync(f'Pick one of the cities from the list: {json.dumps(options.output.cities)}')
+        city = response.output
+        print(f'You\'re going to {city}!')
