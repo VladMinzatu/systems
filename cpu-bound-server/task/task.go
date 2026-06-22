@@ -1,6 +1,11 @@
 package task
 
-import "context"
+import (
+	"context"
+	"fmt"
+	"math/rand/v2"
+	"strconv"
+)
 
 type Task interface {
 	Execute(ctx context.Context)
@@ -39,4 +44,25 @@ func (t *MatMulTask) Execute(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+type SprintfTask struct {
+	Iterations int
+}
+
+func NewSprintfTask(iterations int) *SprintfTask {
+	return &SprintfTask{Iterations: iterations}
+}
+
+func (t *SprintfTask) Execute(ctx context.Context) {
+	for i := 0; i < t.Iterations; i++ {
+		fmt.Sprintf(
+			"%d-%d-%d-%f-%s",
+			i,
+			rand.Int(),
+			rand.Int(),
+			rand.Float64(),
+			strconv.Itoa(i),
+		)
+	}
 }

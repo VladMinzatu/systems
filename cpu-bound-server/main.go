@@ -10,7 +10,7 @@ import (
 
 func main() {
 	start := time.Now()
-	t := task.NewMatMulTask(100)
+	t := task.NewSprintfTask(10_000)
 	t.Execute(context.Background())
 	end := time.Since(start)
 
