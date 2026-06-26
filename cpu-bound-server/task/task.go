@@ -29,7 +29,7 @@ func NewMatMulTask(n int) *MatMulTask {
 	return &task
 }
 
-func (t *MatMulTask) Execute(ctx context.Context) error {
+func (t *MatMulTask) Execute(ctx context.Context) {
 	n := t.N
 	for i := 0; i < n; i++ {
 		for j := 0; j < n; j++ {
@@ -42,8 +42,6 @@ func (t *MatMulTask) Execute(ctx context.Context) error {
 			t.C[i*n+j] = sum
 		}
 	}
-
-	return nil
 }
 
 type SprintfTask struct {
