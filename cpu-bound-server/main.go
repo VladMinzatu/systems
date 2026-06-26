@@ -1,18 +1,12 @@
 package main
 
 import (
-	"context"
-	"fmt"
-	"time"
+	"net/http"
 
-	"github.com/VladMinzatu/systems/cpu-bound-server/task"
+	"github.com/VladMinzatu/systems/cpu-bound-server/api"
 )
 
 func main() {
-	start := time.Now()
-	t := task.NewSprintfTask(10_000)
-	t.Execute(context.Background())
-	end := time.Since(start)
-
-	fmt.Printf("Task execution took: %v ms", end.Milliseconds())
+	http.HandleFunc("GET /health", api.HealthHandler)
+	http.ListenAndServe(":8080", nil)
 }
