@@ -7,6 +7,23 @@ import (
 	"strconv"
 )
 
+type TaskProvider struct{}
+
+func NewTaskProvider() *TaskProvider {
+	return &TaskProvider{}
+}
+
+func (t *TaskProvider) GetTask(kind string, size int) (Task, error) {
+	switch kind {
+	case "cpu":
+		return NewMatMulTask(size), nil
+	case "sprintf":
+		return NewSprintfTask(size), nil
+	default:
+		return nil, fmt.Errorf("Unrecognized task type requested")
+	}
+}
+
 type Task interface {
 	Execute(ctx context.Context)
 }

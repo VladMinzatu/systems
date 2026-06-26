@@ -8,5 +8,7 @@ import (
 
 func main() {
 	http.HandleFunc("GET /health", api.HealthHandler)
+	http.HandleFunc("POST /task", api.TaskHandler)
+
 	http.ListenAndServe(":8080", nil)
 }
