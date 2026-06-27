@@ -10,10 +10,12 @@ import (
 	"github.com/VladMinzatu/systems/cpu-bound-server/task"
 )
 
-var taskProvider *task.TaskProvider
+type Server struct {
+	taskProvider *task.TaskProvider
+}
 
-func init() {
-	taskProvider = task.NewTaskProvider()
+func NewServer(taskProvider *task.TaskProvider) *Server {
+	return &Server{taskProvider: taskProvider}
 }
 
 type HealthResponse struct {
@@ -26,7 +28,7 @@ type TaskRequest struct {
 	Size int
 }
 
-func HealthHandler(w http.ResponseWriter, r *http.Request) {
+func (s *Server) HealthHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	resp := HealthResponse{
@@ -38,7 +40,7 @@ func HealthHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(resp)
 }
 
-func TaskHandler(w http.ResponseWriter, r *http.Request) {
+func (s *Server) TaskHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	decoder := json.NewDecoder(r.Body)
 	var tr TaskRequest
@@ -48,7 +50,7 @@ func TaskHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	task, err := taskProvider.GetTask(tr.Kind, tr.Size)
+	task, err := s.taskProvider.GetTask(tr.Kind, tr.Size)
 	if err != nil {
 		http.Error(w, "Failed to process request", http.StatusBadRequest) // TODO: yeah, shortcut
 		return
