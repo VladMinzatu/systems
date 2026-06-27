@@ -1,7 +1,6 @@
 package api
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -10,12 +9,17 @@ import (
 	"github.com/VladMinzatu/systems/cpu-bound-server/task"
 )
 
-type Server struct {
-	taskProvider *task.TaskProvider
+type Executor interface {
+	Execute(task.Task) <-chan error
 }
 
-func NewServer(taskProvider *task.TaskProvider) *Server {
-	return &Server{taskProvider: taskProvider}
+type Server struct {
+	taskProvider *task.TaskProvider
+	executor     Executor
+}
+
+func NewServer(taskProvider *task.TaskProvider, executor Executor) *Server {
+	return &Server{taskProvider: taskProvider, executor: executor}
 }
 
 type HealthResponse struct {
@@ -57,9 +61,14 @@ func (s *Server) TaskHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	start := time.Now()
-	task.Execute(context.Background())
+	result := s.executor.Execute(task)
+	err = <-result
 	elapsed := time.Since(start)
 
+	if err != nil {
+		http.Error(w, "Task execution failed", http.StatusInternalServerError)
+		return
+	}
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, "Done processing request of type %v in time %v", tr, elapsed)
 }

@@ -1,7 +1,6 @@
 package task
 
 import (
-	"context"
 	"fmt"
 	"math/rand/v2"
 	"strconv"
@@ -25,7 +24,7 @@ func (t *TaskProvider) GetTask(kind string, size int) (Task, error) {
 }
 
 type Task interface {
-	Execute(ctx context.Context)
+	Run()
 }
 
 type MatMulTask struct {
@@ -46,7 +45,7 @@ func NewMatMulTask(n int) *MatMulTask {
 	return &task
 }
 
-func (t *MatMulTask) Execute(ctx context.Context) {
+func (t *MatMulTask) Run() {
 	n := t.N
 	for i := 0; i < n; i++ {
 		for j := 0; j < n; j++ {
@@ -69,7 +68,7 @@ func NewSprintfTask(iterations int) *SprintfTask {
 	return &SprintfTask{Iterations: iterations}
 }
 
-func (t *SprintfTask) Execute(ctx context.Context) {
+func (t *SprintfTask) Run() {
 	for i := 0; i < t.Iterations; i++ {
 		fmt.Sprintf(
 			"%d-%d-%d-%f-%s",

@@ -9,7 +9,8 @@ import (
 
 func main() {
 	taskProvider := task.NewTaskProvider()
-	server := api.NewServer(taskProvider)
+	executor := task.NewSyncExecutor()
+	server := api.NewServer(taskProvider, executor)
 
 	http.HandleFunc("GET /health", server.HealthHandler)
 	http.HandleFunc("POST /task", server.TaskHandler)
