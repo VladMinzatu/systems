@@ -25,22 +25,25 @@ func (t *TaskProvider) GetTask(kind string, size int) (Task, error) {
 
 type Task interface {
 	Run()
+	Result() <-chan error
 }
 
 type MatMulTask struct {
 	N int
 
-	A []float64
-	B []float64
-	C []float64
+	A      []float64
+	B      []float64
+	C      []float64
+	result chan error
 }
 
 func NewMatMulTask(n int) *MatMulTask {
 	task := MatMulTask{
-		N: n,
-		A: make([]float64, n*n),
-		B: make([]float64, n*n),
-		C: make([]float64, n*n),
+		N:      n,
+		A:      make([]float64, n*n),
+		B:      make([]float64, n*n),
+		C:      make([]float64, n*n),
+		result: make(chan error, 1),
 	}
 	return &task
 }
@@ -58,14 +61,20 @@ func (t *MatMulTask) Run() {
 			t.C[i*n+j] = sum
 		}
 	}
+	t.result <- nil
+}
+
+func (t *MatMulTask) Result() <-chan error {
+	return t.result
 }
 
 type SprintfTask struct {
 	Iterations int
+	result     chan error
 }
 
 func NewSprintfTask(iterations int) *SprintfTask {
-	return &SprintfTask{Iterations: iterations}
+	return &SprintfTask{Iterations: iterations, result: make(chan error, 1)}
 }
 
 func (t *SprintfTask) Run() {
@@ -79,4 +88,9 @@ func (t *SprintfTask) Run() {
 			strconv.Itoa(i),
 		)
 	}
+	t.result <- nil
+}
+
+func (t *SprintfTask) Result() <-chan error {
+	return t.result
 }

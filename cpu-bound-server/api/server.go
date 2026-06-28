@@ -10,7 +10,7 @@ import (
 )
 
 type Executor interface {
-	Execute(task.Task) <-chan error
+	Execute(task.Task)
 }
 
 type Server struct {
@@ -61,8 +61,8 @@ func (s *Server) TaskHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	start := time.Now()
-	result := s.executor.Execute(task)
-	err = <-result
+	s.executor.Execute(task)
+	err = <-task.Result() // block and wait on the result
 	elapsed := time.Since(start)
 
 	if err != nil {
