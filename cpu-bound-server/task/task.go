@@ -43,7 +43,7 @@ func NewMatMulTask(n int) *MatMulTask {
 		A:      make([]float64, n*n),
 		B:      make([]float64, n*n),
 		C:      make([]float64, n*n),
-		result: make(chan error, 1),
+		result: make(chan error, 1), // need the buffer of 1 in case the task is run in the same goroutine as the one that invokes it
 	}
 	return &task
 }
