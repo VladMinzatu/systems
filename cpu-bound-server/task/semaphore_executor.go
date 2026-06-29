@@ -1,16 +1,5 @@
 package task
 
-// Simply executes the task synchronously in the current goroutine
-type SyncExecutor struct{}
-
-func NewSyncExecutor() *SyncExecutor {
-	return &SyncExecutor{}
-}
-
-func (s *SyncExecutor) Execute(task Task) {
-	task.Run()
-}
-
 // Executes the task synchronously in the current goroutine
 // with a configurable level of parallelism.
 // When saturated, pending tasks block
