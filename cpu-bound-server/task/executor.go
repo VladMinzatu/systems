@@ -1,5 +1,7 @@
 package task
 
+import "errors"
+
 // Simply executes the task synchronously in the current goroutine
 type SyncExecutor struct{}
 
@@ -7,8 +9,9 @@ func NewSyncExecutor() *SyncExecutor {
 	return &SyncExecutor{}
 }
 
-func (s *SyncExecutor) Execute(task Task) {
+func (s *SyncExecutor) Execute(task Task) error {
 	task.Run()
+	return nil
 }
 
 // Executes the task synchronously in the current goroutine
@@ -24,20 +27,24 @@ func NewSemaphoreExecutor(n int) *SemaphoreExecutor {
 	}
 }
 
-func (e *SemaphoreExecutor) Execute(task Task) {
+func (e *SemaphoreExecutor) Execute(task Task) error {
 	e.sem <- struct{}{}
 	defer func() { <-e.sem }()
 
 	task.Run()
+	return nil
 }
 
 // Executes the tasks in a worker pool with a configurable number of workers and queue size.
 // Similar to the SemaphoreExecutor, except the tasks are executed in dedicated goroutines instead of the caller's goroutine.
 type WorkerPoolExecutor struct {
-	tasks chan Task
+	tasks          chan Task
+	rejectWhenFull bool
 }
 
-func NewWorkerPoolExecutor(workers, queueSize int) *WorkerPoolExecutor {
+var ErrQueueFull = errors.New("queue full")
+
+func NewWorkerPoolExecutor(workers, queueSize int, rejectWhenFull bool) *WorkerPoolExecutor {
 	e := &WorkerPoolExecutor{
 		tasks: make(chan Task, queueSize),
 	}
@@ -55,6 +62,15 @@ func (e *WorkerPoolExecutor) worker() {
 	}
 }
 
-func (e *WorkerPoolExecutor) Execute(task Task) {
-	e.tasks <- task
+func (e *WorkerPoolExecutor) Execute(task Task) error {
+	if e.rejectWhenFull {
+		select {
+		case e.tasks <- task:
+		default:
+			return ErrQueueFull
+		}
+	} else {
+		e.tasks <- task
+	}
+	return nil
 }

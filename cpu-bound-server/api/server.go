@@ -10,7 +10,7 @@ import (
 )
 
 type Executor interface {
-	Execute(task.Task)
+	Execute(task.Task) error
 }
 
 type Server struct {
