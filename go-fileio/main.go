@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 func main() {
@@ -24,7 +25,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("wrote and counted %d lines via buffered io\n", n)
+	fmt.Printf("wrote, then read and processed %d lines via buffered io\n", n)
 }
 
 func writeBuffered(path string, lines int) (err error) {
@@ -58,6 +59,8 @@ func countLines(path string) (int, error) {
 	scanner := bufio.NewScanner(f)
 	count := 0
 	for scanner.Scan() {
+		line := scanner.Text()
+		strings.Split(line, " ")
 		count++
 	}
 	if err := scanner.Err(); err != nil {
