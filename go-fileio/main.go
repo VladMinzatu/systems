@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"path/filepath"
@@ -21,7 +22,13 @@ func main() {
 		log.Fatal(err)
 	}
 
-	n, err := countLines(path)
+	f, err := os.Open(path)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+
+	n, err := countLines(f)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -49,14 +56,8 @@ func writeBuffered(path string, lines int) (err error) {
 	return w.Flush()
 }
 
-func countLines(path string) (int, error) {
-	f, err := os.Open(path)
-	if err != nil {
-		return 0, err
-	}
-	defer f.Close()
-
-	scanner := bufio.NewScanner(f)
+func countLines(reader io.Reader) (int, error) {
+	scanner := bufio.NewScanner(reader)
 	count := 0
 	for scanner.Scan() {
 		line := scanner.Text()
