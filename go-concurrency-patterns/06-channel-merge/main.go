@@ -13,6 +13,9 @@ func merge(ch1, ch2 <-chan int) <-chan int {
 	go func() {
 		defer close(merged)
 		for {
+			if ch1 == nil && ch2 == nil {
+				return // both channels are closed, we can exit the goroutine
+			}
 			select {
 			case v1, ok := <-ch1:
 				if !ok {
@@ -26,10 +29,6 @@ func merge(ch1, ch2 <-chan int) <-chan int {
 					continue
 				}
 				merged <- v2
-			default:
-				if ch1 == nil && ch2 == nil {
-					return // both channels are closed, we can exit the goroutine
-				}
 			}
 		}
 	}()
