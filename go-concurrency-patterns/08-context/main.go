@@ -6,7 +6,14 @@ import (
 )
 
 func main() {
-	CountUntilCancel()
+	CountUntilTimeout()
+}
+
+func CountUntilTimeout() {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel() // always call cancel to release resources, even if the timeout fires
+
+	count(ctx)
 }
 
 func CountUntilCancel() {
