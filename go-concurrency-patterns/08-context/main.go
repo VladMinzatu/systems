@@ -6,7 +6,15 @@ import (
 )
 
 func main() {
-	CountUntilTimeout()
+	CountUntilDeadline()
+}
+
+func CountUntilDeadline() {
+	deadline := time.Now().Add(5 * time.Second)
+	ctx, cancel := context.WithDeadline(context.Background(), deadline)
+	defer cancel() // still important, even with a fixed deadline
+
+	count(ctx)
 }
 
 func CountUntilTimeout() {
@@ -16,8 +24,8 @@ func CountUntilTimeout() {
 	count(ctx)
 }
 
-func CountUntilCancel() {
-	ctx, cancel := context.WithCancel(context.Background())
+func CountUntilCancel(ctx context.Context) { // pass in context here so we can cancel it from outside the function
+	ctx, cancel := context.WithCancel(ctx)
 
 	go func() {
 		time.Sleep(5 * time.Second)
