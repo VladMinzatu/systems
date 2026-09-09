@@ -3,4 +3,4 @@ Ideas:
 - agent-inspektor-gadget
 - Assembly projects
 - embedded with Go + periph.io | unix API
-- embedded with Rust for microcontrollers
+- embedded with Rust for microcontrollers + RTOS + async (embassy)
