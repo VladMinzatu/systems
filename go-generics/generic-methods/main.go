@@ -13,6 +13,10 @@ func (l List[T]) Map[U any](f func(T) U) List[U] {
 	return result
 }
 
+// But generic interface methods are still not supported. You cannot define a method on an interface type that has its own type parameters.
+// type MyInterface[T any] interface {
+// 	DoSomething[P any]() T <-- This is not allowed!!! (P)
+// }
 func main() {
 	MyList := List[int]{1, 2, 3, 4, 5}
 	// Use the Map method to convert the List[int] to a List[string] - 
