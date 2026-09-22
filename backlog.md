@@ -3,5 +3,6 @@ Ideas:
 - agent-inspektor-gadget
 - Assembly projects
 - gRPC, http2/3, websockets, graphql, etc.
+- go (s)log handlers
 - embedded with Go + periph.io | unix API
 - embedded with Rust for microcontrollers + RTOS + async (embassy)
