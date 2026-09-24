@@ -4,6 +4,6 @@ Ideas:
 - Assembly projects
 - gRPC, http2/3, websockets, graphql, etc.
 - go 1.27 features
-- go (s)log handlers
+- go (s)log handlers (https://github.com/golang/example/blob/master/slog-handler-guide/README.md)
 - embedded with Go + periph.io | unix API
 - embedded with Rust for microcontrollers + RTOS + async (embassy)
