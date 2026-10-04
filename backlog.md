@@ -1,6 +1,6 @@
 Ideas:
 - go bakcpressure and admission control (queue->metric->scaling | resource usage -> tuning)
-- agent-inspektor-gadget
+- agent-inspektor-gadget | trigger on incident, adaptive targets, collectors for metrics - or manual
 - Assembly projects
 - gRPC, http2/3, websockets, graphql, etc.
 - go 1.27 features
